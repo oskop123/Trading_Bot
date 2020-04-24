@@ -1,7 +1,7 @@
+import datetime
+
 import pandas as pd
 import pandas_datareader as pdr
-import numpy as np
-import datetime
 
 aapl = pdr.get_data_yahoo('AAPL',
                           start=datetime.datetime(2006, 10, 1),
@@ -56,7 +56,6 @@ aapl['Diff'] = aapl.Open - aapl.Close
 del aapl['Diff']
 
 # Plot the closing prices of aapl
-import matplotlib.pyplot as plt
 
 # aapl['Close'].plot(grid=True)
 # plt.show()
@@ -86,10 +85,10 @@ daily_pct_change.describe()
 
 # Calculate the cumulative daily returns
 cum_daily_return = (1 + daily_pct_change).cumprod()
-#cum_daily_return.plot()
-#plt.show()
+# cum_daily_return.plot()
+# plt.show()
 
 # Calculate the cumulative monthly returns
 cum_monthly_return = cum_daily_return.resample('M').mean()
-#cum_monthly_return.plot()
-#plt.show()
+# cum_monthly_return.plot()
+# plt.show()
