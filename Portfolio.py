@@ -1,32 +1,37 @@
-from MovingAverageCrossover import signals as signals
-from MovingAverageCrossover import aapl as aapl
+import datetime
 import pandas as pd
 import pandas_datareader as pdr
+import numpy as np
+import matplotlib.pyplot as plt
 
-# Set the initial capital
-initial_capital = float(100000.0)
+class Portfolio:
+    """Keeps track of the portfolio of a stock based on signals passed by a strategy
 
-# Create a dataframe 'positions'
-positions = pd.DataFrame(index=signals.index).fillna(0.0)
+    Requires:
+    symbol - A stock symbol
+    bars - A DataFrame of bars for a symbol set.
+    signals - A pandas DataFrame of signals (1, 0, -1) for each symbol.
+    initial_capital - The amount in cash at the start of the portfolio."""
 
-# Buy 100 shares
-positions['AAPL'] = 100*signals['signal']
+    def __init__(self, symbol, signals, initial_capital):
+        # Initialize the variables
+        self.symbol = symbol
+        self.bars = bars
+        self.signals = signals
+        self.initial_capital = float(initial_capital)
+        self.positions = self.generate_positions()
 
-# Initialize the portfolio with value owned
-portfolio = positions.multiply(aapl['Adj Close'], axis=0)
+    def generate_positions(self):
+        # Generate positions from signals
+        positions = pd.DataFrame(index=self.signals.index).fillna(0.0)
+        positions[self.symbol] = 100*signals['signal']
+        return positions
 
-# Store the difference in shares owned
-pos_diff = positions.diff()
-
-
-# Add cash to portfolio
-portfolio['cash'] = initial_capital - (pos_diff.multiply(aapl['Adj Close'], axis=0)).sum(axis=1).cumsum()
-
-# Add 'holdings' to portfolio
-portfolio['holdings'] = (positions.multiply(aapl['Adj Close'], axis=0)).sum(axis=1)
-
-# Add 'total' to portfolio
-portfolio['total'] = portfolio['cash'] + portfolio['holdings']
-
-# Add 'returns' to portfolio
-portfolio['returns'] = portfolio['total'].pct_change()
+    def calculate(self):
+        portfolio = self.positions*self.bars['Close']
+        pos_diff = self.positions.diff()
+        portfolio['holdings'] = (self.positions*self.bars['Close']).sum(axis=1)
+        portfolio['cash'] = self.initial_capital - (pos_diff*self.bars['Close']).sum(axis=1).cumsum()
+        portfolio['total'] = portfolio['cash'] + portfolio['holdings']
+        portfolio['returns'] = portfolio['total'].pct_change()
+        return portfolio
