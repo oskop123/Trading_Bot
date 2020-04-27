@@ -1,12 +1,12 @@
 import json
-import logging
 import socket
-import ssl
+import logging
 import time
+import ssl
 from threading import Thread
 
 # set to true on debug environment only
-DEBUG = True
+DEBUG = False
 
 # default connection properites
 DEFAULT_XAPI_ADDRESS = 'xapi.xtb.com'
@@ -18,7 +18,7 @@ WRAPPER_NAME = 'python'
 WRAPPER_VERSION = '2.5.0'
 
 # API inter-command timeout (in ms)
-API_SEND_TIMEOUT = 100
+API_SEND_TIMEOUT = 500
 
 # max connection tries
 API_MAX_CONN_TRIES = 3
@@ -174,7 +174,6 @@ class APIClient(JsonSocket):
     def commandExecute(self, commandName, arguments=None):
         return self.execute(baseCommand(commandName, arguments))
 
-
 class APIStreamClient(JsonSocket):
     def __init__(self, address=DEFAULT_XAPI_ADDRESS, port=DEFUALT_XAPI_STREAMING_PORT, encrypt=True, ssId=None,
                  tickFun=None, tradeFun=None, balanceFun=None, tradeStatusFun=None, profitFun=None, newsFun=None):
@@ -273,7 +272,6 @@ def baseCommand(commandName, arguments=None):
         arguments = dict()
     return dict([('command', commandName), ('arguments', arguments)])
 
-
 def loginCommand(userId, password, appName=''):
     return baseCommand('login', dict(userId=userId, password=password, appName=appName))
 
@@ -282,78 +280,22 @@ def loginCommand(userId, password, appName=''):
 def procTickExample(msg):
     print("TICK: ", msg)
 
-
 # example function for processing trades from Streaming socket
 def procTradeExample(msg):
     print("TRADE: ", msg)
-
 
 # example function for processing trades from Streaming socket
 def procBalanceExample(msg):
     print("BALANCE: ", msg)
 
-
 # example function for processing trades from Streaming socket
 def procTradeStatusExample(msg):
     print("TRADE STATUS: ", msg)
-
 
 # example function for processing trades from Streaming socket
 def procProfitExample(msg):
     print("PROFIT: ", msg)
 
-
 # example function for processing news from Streaming socket
 def procNewsExample(msg):
     print("NEWS: ", msg)
-
-
-def main():
-    # enter your login credentials here
-    userId = 11096095
-    password = 'kvwzM97B2EuS'
-
-    # create & connect to RR socket
-    client = APIClient()
-
-    # connect to RR socket, login
-    loginResponse = client.execute(loginCommand(userId=userId, password=password))
-    logger.info(str(loginResponse))
-
-    # check if user logged in correctly
-    if (loginResponse['status'] == False):
-        print('Login failed. Error code: {0}'.format(loginResponse['errorCode']))
-        return
-
-    # get ssId from login response
-    ssid = loginResponse['streamSessionId']
-
-    # second method of invoking commands
-    resp = client.commandExecute('getAllSymbols')
-
-    # create & connect to Streaming socket with given ssID
-    # and functions for processing ticks, trades, profit and tradeStatus
-    sclient = APIStreamClient(ssId=ssid, tickFun=procTickExample, tradeFun=procTradeExample,
-                              profitFun=procProfitExample, tradeStatusFun=procTradeStatusExample)
-
-    # subscribe for trades
-    # sclient.subscribeTrades()
-
-    # subscribe for prices
-    sclient.subscribePrices(['EURUSD'])
-
-    # subscribe for profits
-    # sclient.subscribeProfits()
-
-    # this is an example, make it run for 5 seconds
-    time.sleep(999)
-
-    # gracefully close streaming socket
-    sclient.disconnect()
-
-    # gracefully close RR socket
-    client.disconnect()
-
-
-if __name__ == "__main__":
-    main()
