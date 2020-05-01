@@ -222,7 +222,7 @@ class APIStreamClient(JsonSocket):
         self._sendObj(dictionary)
 
     def subscribePrice(self, symbol):
-        self.execute(dict(command='getTickPrices', symbol=symbol, streamSessionId=self._ssId))
+        self.execute(dict(command='getTickPrices', symbol=symbol, streamSessionId=self._ssId, minArrivalTime=1000))
 
     def subscribePrices(self, symbols):
         for symbolX in symbols:
