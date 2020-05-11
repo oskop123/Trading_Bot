@@ -110,9 +110,7 @@ class APIStreamClient(JsonSocket):
                  encrypt=True, ss_id=None, tick_fun=None):
         super(APIStreamClient, self).__init__(address, port, encrypt)
         self._ssId = ss_id
-
         self._tickFun = tick_fun
-
         self.connect()
 
         self._running = True
