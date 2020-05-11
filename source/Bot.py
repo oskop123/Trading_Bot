@@ -8,7 +8,7 @@ def main():
     password = "r7vZ9U8vsStd"
 
     # settings
-    symbols = ('EURUSD', 'EURJPY')
+    symbols = ('EURUSD', 'EURJPD')
     short_window = 10
     long_window = 50
 

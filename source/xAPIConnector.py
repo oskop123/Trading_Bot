@@ -19,29 +19,21 @@ API_MAX_CONN_TRIES = 3
 class TransactionSide(object):
     BUY = 0
     SELL = 1
-    BUY_LIMIT = 2
-    SELL_LIMIT = 3
-    BUY_STOP = 4
-    SELL_STOP = 5
 
 
 class TransactionType(object):
     ORDER_OPEN = 0
     ORDER_CLOSE = 2
-    ORDER_MODIFY = 3
-    ORDER_DELETE = 4
 
 
 class JsonSocket(object):
     def __init__(self, address, port, encrypt=False):
-        self._ssl = encrypt
-        if not self._ssl:
-            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        else:
+        if encrypt:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.socket = ssl.wrap_socket(sock)
+        else:
+            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.conn = self.socket
-        self._timeout = None
         self._address = address
         self._port = port
         self._decoder = json.JSONDecoder()
@@ -54,8 +46,8 @@ class JsonSocket(object):
             except socket.error:
                 time.sleep(0.25)
                 continue
-            return True
-        return False
+            return
+        raise Exception('Cannot connect to server')
 
     def _send_obj(self, obj):
         msg = json.dumps(obj)
@@ -92,23 +84,15 @@ class JsonSocket(object):
         return msg
 
     def close(self):
-        self._close_socket()
-        if self.socket is not self.conn:
-            self._close_connection()
-
-    def _close_socket(self):
         self.socket.close()
-
-    def _close_connection(self):
-        self.conn.close()
+        if self.socket is not self.conn:
+            self.conn.close()
 
 
 class APIClient(JsonSocket):
     def __init__(self, address=DEFAULT_ADDRESS, port=DEFAULT_PORT, encrypt=True):
         super(APIClient, self).__init__(address, port, encrypt)
-        if not self.connect():
-            raise Exception(
-                "Cannot connect to " + address + ":" + str(port) + " after " + str(API_MAX_CONN_TRIES) + " retries")
+        self.connect()
 
     def execute(self, dictionary):
         self._send_obj(dictionary)
@@ -129,9 +113,7 @@ class APIStreamClient(JsonSocket):
 
         self._tickFun = tick_fun
 
-        if not self.connect():
-            raise Exception("Cannot connect to streaming on " + address + ":" + str(port) + " after " + str(
-                API_MAX_CONN_TRIES) + " retries")
+        self.connect()
 
         self._running = True
         self._t = Thread(target=self._read_stream, args=())
