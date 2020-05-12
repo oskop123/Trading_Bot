@@ -6,7 +6,7 @@ def main():
     # enter your login credentials here
     user_id = 11096095
     password = "r7vZ9U8vsStd"
-    symbols = ('MSFT.US', 'ROKU.US')
+    symbols = ('W20', 'UK100', 'DE30')
     short_window = 10
     long_window = 50
 
@@ -32,7 +32,7 @@ def main():
     sclient = xAPIConnector.APIStreamClient(ss_id=ssid, tick_fun=data.fetch_data)
 
     # subscribe for prices of symbols in given interval time
-    sclient.subscribe_prices(symbols, 1000)
+    sclient.subscribe_prices(symbols, 60*1000)
 
     # Press 'Enter' to stop
     print('Press Ctrl + C to stop\n')

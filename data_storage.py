@@ -49,6 +49,12 @@ class DataStorage:
             name - name of the stock to trade
             price - price of the stock to trade """
 
+        # Get free margin
+        response = self.command_execute('getMarginLevel')
+        # margin = response['returnData']['margin_free']
+        # # Volume = 20% of margin
+        # volume = 0.2*margin
+
         transaction = {
             "tradeTransInfo": {
                 "cmd": xAPIConnector.TransactionSide.BUY,
@@ -56,7 +62,7 @@ class DataStorage:
                 "price": price,
                 "symbol": symbol,
                 "type": xAPIConnector.TransactionType.ORDER_OPEN,
-                "volume": 10
+                "volume": 1
             }
         }
         response = self.command_execute('tradeTransaction', transaction)
@@ -72,9 +78,12 @@ class DataStorage:
             "openedOnly": True
         }
         trades = self.command_execute('getTrades', transaction)
-        # Extract the latest position order number
+        # Get latest position
         last_position = trades['returnData'][0]
+        # Extract order ID
         order = last_position['order']
+        # Extract volume
+        #volume = last_position['volume']
 
         transaction = {
             "tradeTransInfo": {
@@ -83,7 +92,7 @@ class DataStorage:
                 "price": price,
                 "symbol": symbol,
                 "type": xAPIConnector.TransactionType.ORDER_CLOSE,
-                "volume": 10
+                "volume": 1
             }
         }
         response = self.command_execute('tradeTransaction', transaction)
