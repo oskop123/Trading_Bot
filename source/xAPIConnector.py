@@ -9,9 +9,6 @@ DEFAULT_ADDRESS = 'xapi.xtb.com'
 DEFAULT_PORT = 5124
 DEFAULT_STREAMING_PORT = 5125
 
-# API inter-command timeout (in ms)
-API_SEND_TIMEOUT = 500
-
 # max connection tries
 API_MAX_CONN_TRIES = 3
 
@@ -40,6 +37,7 @@ class JsonSocket(object):
         self._decoder = json.JSONDecoder()
         self._receivedData = ''
 
+    # server connection
     def connect(self):
         for i in range(API_MAX_CONN_TRIES):
             try:
@@ -51,22 +49,18 @@ class JsonSocket(object):
         raise Exception('Cannot connect to server')
 
     def _send_obj(self, obj):
-        msg = json.dumps(obj)
-        self._waiting_send(msg)
-
-    def _waiting_send(self, msg):
+        msg = json.dumps(obj)  # serialize dict into JSON format
         if self.socket:
-            sent = 0
             msg = msg.encode('utf-8')
-            while sent < len(msg):
-                sent += self.socket.send(msg[sent:])
-                time.sleep(API_SEND_TIMEOUT / 1000)
+            self.socket.sendall(msg)  # send data in JSON format
+        else:
+            raise RuntimeError('socket connection broken')
 
     def _read(self, bytes_size=4096):
         if not self.socket:
-            raise RuntimeError("socket connection broken")
+            raise RuntimeError('socket connection broken')
         while True:
-            char = self.socket.recv(bytes_size).decode()
+            char = self.socket.recv(bytes_size).decode('utf-8')
             self._receivedData += char
             try:
                 (resp, size) = self._decoder.raw_decode(self._receivedData)
@@ -108,10 +102,11 @@ class APIStreamClient(JsonSocket):
     def __init__(self, address=DEFAULT_ADDRESS, port=DEFAULT_STREAMING_PORT,
                  encrypt=True, ss_id=None, tick_fun=None):
         super(APIStreamClient, self).__init__(address, port, encrypt)
-        self._ssId = ss_id
-        self._tickFun = tick_fun
+        self._ssId = ss_id  # stream session id - needed for streaming subscription
+        self._tickFun = tick_fun  # data processing function
         self.connect()
 
+        # Thread for reading streaming data
         self._running = True
         self._t = Thread(target=self._read_stream)
         self._t.start()
@@ -122,9 +117,9 @@ class APIStreamClient(JsonSocket):
             self._tickFun(msg)
 
     def disconnect(self):
-        self._running = False
-        self._t.join()
-        self.close()
+        self._running = False  # stop thread function
+        self._t.join()  # terminate thread
+        self.close()  # close connection
 
     def execute(self, dictionary):
         self._send_obj(dictionary)
