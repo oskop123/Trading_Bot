@@ -32,7 +32,8 @@ def main():
     sclient = xAPIConnector.APIStreamClient(ss_id=ssid, tick_fun=data.fetch_data)
 
     # subscribe for prices of symbols in given interval time
-    sclient.subscribe_prices(symbols, 60*1000)
+    interval = 60*1000 # 60*1000ms = 60s
+    sclient.subscribe_prices(symbols, interval)
 
     # Press 'Enter' to stop
     print('Press Ctrl + C to stop\n')
