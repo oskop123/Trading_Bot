@@ -2,6 +2,8 @@
 Adam Księżyk i Oskar Świerczek
 
 Aby rozpocząć działanie programu proszę uruchomić **Bot.py**.
+Uwaga! Interwał pobierania cen jest ustawiony na 1 min a długa średnia krocząca na 50 wartości, stąd prosty wniosek, że zanim program zacznie spekulację musi minąc co najmniej 50 min. Aby przyspieszyć proces można zmienić wartości zmiennych *long_window* i *interval*.
+
 Plan działania programu:
 - połączenie z API XTB
 - przypisanie funkcji odbierającej wiadomości od API (*ticker_fun*)
