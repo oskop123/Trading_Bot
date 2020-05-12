@@ -73,7 +73,10 @@ class DataStorage:
         }
         trades = self.command_execute('getTrades', transaction)
         # Get latest position
-        last_position = trades['returnData'][0]
+        for trade in trades['returnData']:
+            if trade['symbol'] == symbol:
+                last_position = trade
+                break
         # Extract order ID
         order = last_position['order']
 
@@ -89,3 +92,5 @@ class DataStorage:
         }
         response = self.command_execute('tradeTransaction', transaction)
         print('Sell ', symbol, ' for ', price, ', status: ', response['status'])
+
+    def plot
