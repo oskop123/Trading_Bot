@@ -3,10 +3,11 @@ from statistics import mean
 
 
 class Macs:
-    """  """
+    """ Moving Average Crossover Strategy """
     def __init__(self, short_window, long_window):
+        """ short_window - short window length
+            long_window - long window length """
         self.price_ask = collections.deque(maxlen=long_window)
-        self.price_bid = collections.deque(maxlen=long_window)
         self.long_window = long_window
         self.short_window = short_window
         self.last_signal = 0
@@ -14,7 +15,6 @@ class Macs:
 
     def update(self, ask, bid):
         self.price_ask.append(ask)
-        self.price_bid.append(bid)
         self.strategy()
 
     def strategy(self):
