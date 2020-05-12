@@ -6,7 +6,7 @@ def main():
     # enter your login credentials here
     user_id = 11096095
     password = "r7vZ9U8vsStd"
-    symbols = ('W20', 'UK100', 'DE30')
+    symbols = ('UK100', 'DE30', 'EURUSD', 'USDJPY')
     short_window = 10
     long_window = 50
 
@@ -38,27 +38,15 @@ def main():
     print('Press Ctrl + C to stop\n')
     input()
 
+
     # gracefully close streaming socket
     sclient.disconnect()
 
     # gracefully close RR socket
     client.disconnect()
 
-    '''
-    # Load stock data
-    initial_capital = float(10000.0)  # Initial capital
-    symbol = 'AAPL'  # Stock symbol
-    time_start = datetime.datetime.today() - datetime.timedelta(days=200)  # Period start
-    time_stop = datetime.date.today()  # Period stop
-    bars = pdr.DataReader(symbol, "yahoo", time_start, time_stop)  # Load data (daily interval)
-    # Use movin average cross strategy
-    signals = moving_average_cross_strategy(bars, 10, 30)  # Generate signals
-    portfolio = portfolio(symbol, signals, initial_capital)  # Manage portfolio using signals
-    # Plot results
-    moving_average_cross_plot(signals)  # Plot strategy results
-    portfolio_plot(portfolio)  # Plot portfolio value
-    '''
-
+    # Generate raport
+    data.raport()
 
 if __name__ == "__main__":
     main()

@@ -27,7 +27,7 @@ class DataStorage:
         # Stock to update (Macs object)
         s = self.data.get(symbol)
         # Update prices
-        s.update(ask, bid)
+        s.update(ask)
         # Trade
         self.transaction(symbol, ask, bid)
 
@@ -93,4 +93,6 @@ class DataStorage:
         response = self.command_execute('tradeTransaction', transaction)
         print('Sell ', symbol, ' for ', price, ', status: ', response['status'])
 
-    def plot
+    def raport(self):
+        for symbol, obj in self.data.items():
+            obj.raport(symbol)
