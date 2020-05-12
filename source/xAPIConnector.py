@@ -16,11 +16,13 @@ API_SEND_TIMEOUT = 500
 API_MAX_CONN_TRIES = 3
 
 
+# Represents transaction commands
 class TransactionSide(object):
     BUY = 0
     SELL = 1
 
 
+# Represents transaction types
 class TransactionType(object):
     ORDER_OPEN = 0
     ORDER_CLOSE = 2
@@ -33,7 +35,6 @@ class JsonSocket(object):
             self.socket = ssl.wrap_socket(sock)
         else:
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.conn = self.socket
         self._address = address
         self._port = port
         self._decoder = json.JSONDecoder()
@@ -58,14 +59,14 @@ class JsonSocket(object):
             sent = 0
             msg = msg.encode('utf-8')
             while sent < len(msg):
-                sent += self.conn.send(msg[sent:])
+                sent += self.socket.send(msg[sent:])
                 time.sleep(API_SEND_TIMEOUT / 1000)
 
     def _read(self, bytes_size=4096):
         if not self.socket:
             raise RuntimeError("socket connection broken")
         while True:
-            char = self.conn.recv(bytes_size).decode()
+            char = self.socket.recv(bytes_size).decode()
             self._receivedData += char
             try:
                 (resp, size) = self._decoder.raw_decode(self._receivedData)
@@ -85,8 +86,6 @@ class JsonSocket(object):
 
     def close(self):
         self.socket.close()
-        if self.socket is not self.conn:
-            self.conn.close()
 
 
 class APIClient(JsonSocket):
@@ -114,15 +113,13 @@ class APIStreamClient(JsonSocket):
         self.connect()
 
         self._running = True
-        self._t = Thread(target=self._read_stream, args=())
-        self._t.setDaemon(True)
+        self._t = Thread(target=self._read_stream)
         self._t.start()
 
     def _read_stream(self):
         while self._running:
             msg = self._read_obj()
-            if msg["command"] == 'tickPrices':
-                self._tickFun(msg)
+            self._tickFun(msg)
 
     def disconnect(self):
         self._running = False
@@ -140,11 +137,13 @@ class APIStreamClient(JsonSocket):
             self.subscribe_price(symbolX)
 
 
+# return dictionary representing JSON objects
 def base_command(command_name, arguments=None):
     if arguments is None:
         arguments = dict()
     return dict([('command', command_name), ('arguments', arguments)])
 
 
+# return dictionary representing JSON login object
 def login_command(user_id, password, app_name=''):
     return base_command('login', dict(userId=user_id, password=password, appName=app_name))
