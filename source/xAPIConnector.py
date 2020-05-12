@@ -71,6 +71,7 @@ class JsonSocket(object):
         while True:
             char = self.socket.recv(4096).decode('utf-8')
             self._receivedData += char
+            resp = None
             try:
                 (resp, size) = self._decoder.raw_decode(self._receivedData)
                 if size == len(self._receivedData):
@@ -127,8 +128,7 @@ class APIStreamClient(JsonSocket):
 
     def _read_stream(self):
         while self._running:
-            msg = self._read_obj()
-            self._tickFun(msg)
+            self._tickFun(self._read_obj())
 
     def disconnect(self):
         self._running = False
@@ -140,7 +140,8 @@ class APIStreamClient(JsonSocket):
         self._send_obj(dictionary)
 
     def subscribe_price(self, symbol, interval):
-        self.execute(dict(command='getTickPrices', symbol=symbol, streamSessionId=self._ssId, minArrivalTime=interval))
+        self.execute(dict(command='getTickPrices', symbol=symbol,
+                          streamSessionId=self._ssId, minArrivalTime=interval))
 
     def subscribe_prices(self, symbols, interval):
         for symbolX in symbols:
