@@ -1,7 +1,7 @@
 import json
 import socket
-import time
 import ssl
+import time
 from threading import Thread
 
 # default connection properites
@@ -124,12 +124,12 @@ class APIStreamClient(JsonSocket):
     def execute(self, dictionary):
         self._send_obj(dictionary)
 
-    def subscribe_price(self, symbol):
-        self.execute(dict(command='getTickPrices', symbol=symbol, streamSessionId=self._ssId))
+    def subscribe_price(self, symbol, interval):
+        self.execute(dict(command='getTickPrices', symbol=symbol, streamSessionId=self._ssId, minArrivalTime=interval))
 
-    def subscribe_prices(self, symbols):
+    def subscribe_prices(self, symbols, interval):
         for symbolX in symbols:
-            self.subscribe_price(symbolX)
+            self.subscribe_price(symbolX, interval)
 
 
 # return dictionary representing JSON objects

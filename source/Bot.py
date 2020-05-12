@@ -1,14 +1,12 @@
-import xAPIConnector
 import data_storage
+import xAPIConnector
 
 
 def main():
     # enter your login credentials here
     user_id = 11096095
     password = "r7vZ9U8vsStd"
-
-    # settings
-    symbols = ('EURUSD', 'EURJPD')
+    symbols = ('W20', 'DE30')  # , 'O2D.DE', 'RRTL.DE', 'RWE.DE', 'UTDI.DE')
     short_window = 10
     long_window = 50
 
@@ -30,19 +28,20 @@ def main():
     data = data_storage.DataStorage(symbols, short_window, long_window, client.command_execute)
 
     # create & connect to Streaming socket with given ssID
+    # and functions for processing ticks, trades, profit and tradeStatus
     sclient = xAPIConnector.APIStreamClient(ss_id=ssid, tick_fun=data.fetch_data)
 
-    # subscribe for prices
-    sclient.subscribe_prices(symbols)
+    # subscribe for prices of symbols in given interval time
+    sclient.subscribe_prices(symbols, 1000)
 
     # Press 'Enter' to stop
-    print('Press "Enter" to stop:')
+    print('Press Ctrl + C to stop\n')
     input()
 
-    # close streaming socket
+    # gracefully close streaming socket
     sclient.disconnect()
 
-    # close RR socket
+    # gracefully close RR socket
     client.disconnect()
 
 
