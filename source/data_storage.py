@@ -1,10 +1,9 @@
-import xAPIConnector
 from MovingAverageCrossoverStrategy import Macs
+import xAPIConnector
 
 
 class DataStorage:
     """ Store all needed data of a stock """
-
     def __init__(self, symbols, short_window, long_window, command_execute):
         """ symbols - stocks symbols
             short_window - length of the short moving average window
@@ -28,7 +27,7 @@ class DataStorage:
         # Stock to update (Macs object)
         s = self.data.get(symbol)
         # Update prices
-        s.update(ask, bid)
+        s.update(ask)
         # Trade
         self.transaction(symbol, ask, bid)
 
@@ -93,3 +92,7 @@ class DataStorage:
         }
         response = self.command_execute('tradeTransaction', transaction)
         print('Sell ', symbol, ' for ', price, ', status: ', response['status'])
+
+    def raport(self):
+        for symbol, obj in self.data.items():
+            obj.raport(symbol)
