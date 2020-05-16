@@ -32,7 +32,8 @@ class JsonSocket(object):
             _port - destination port (server)
             _decoder - object used for decoding JSON
             _receivedData - stores received data"""
-        self.socket = ssl.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM))
+        self.socket = ssl.create_default_context().wrap_socket(
+            socket.socket(socket.AF_INET, socket.SOCK_STREAM), server_hostname=DEFAULT_ADDRESS)
         self._address = address
         self._port = port
         self._decoder = json.JSONDecoder()
