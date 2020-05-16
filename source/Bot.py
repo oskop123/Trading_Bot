@@ -1,12 +1,12 @@
-import data_storage
 import xAPIConnector
+import data_storage
 
 
 def main():
     # enter your login credentials here
     user_id = 11096095
     password = "r7vZ9U8vsStd"
-    symbols = ('W20', 'DE30')  # , 'O2D.DE', 'RRTL.DE', 'RWE.DE', 'UTDI.DE')
+    symbols = ('UK100', 'DE30', 'EURUSD', 'USDJPY')
     short_window = 10
     long_window = 50
 
@@ -32,7 +32,8 @@ def main():
     sclient = xAPIConnector.APIStreamClient(ss_id=ssid, tick_fun=data.fetch_data)
 
     # subscribe for prices of symbols in given interval time
-    sclient.subscribe_prices(symbols, 1000)
+    interval = 60 * 1000  # 60*1000ms = 60s
+    sclient.subscribe_prices(symbols, interval)
 
     # Press 'Enter' to stop
     print('Press Ctrl + C to stop\n')
@@ -43,6 +44,9 @@ def main():
 
     # gracefully close RR socket
     client.disconnect()
+
+    # Generate raport
+    data.raport()
 
 
 if __name__ == "__main__":

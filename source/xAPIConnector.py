@@ -24,19 +24,15 @@ class TransactionType(object):
 
 
 class JsonSocket(object):
-    """ Socket used for JSON communication."""
+    """ Socket for JSON communication."""
 
-    def __init__(self, address, port, encrypt=False):
+    def __init__(self, address, port):
         """ socket - socket object
             _address - destination address (server)
             _port - destination port (server)
             _decoder - object used for decoding JSON
             _receivedData - stores received data"""
-        if encrypt:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.socket = ssl.wrap_socket(sock)
-        else:
-            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket = ssl.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM))
         self._address = address
         self._port = port
         self._decoder = json.JSONDecoder()
@@ -92,8 +88,8 @@ class JsonSocket(object):
 class APIClient(JsonSocket):
     """  Extension of JsonSocket for Request/Response Service. """
 
-    def __init__(self, address=DEFAULT_ADDRESS, port=DEFAULT_PORT, encrypt=True):
-        super(APIClient, self).__init__(address, port, encrypt)
+    def __init__(self, address=DEFAULT_ADDRESS, port=DEFAULT_PORT):
+        super(APIClient, self).__init__(address, port)
         self.connect()
 
     def execute(self, dictionary):
@@ -113,8 +109,8 @@ class APIStreamClient(JsonSocket):
     """ Extension of JsonSocket for Streaming Service. """
 
     def __init__(self, address=DEFAULT_ADDRESS, port=DEFAULT_STREAMING_PORT,
-                 encrypt=True, ss_id=None, tick_fun=None):
-        super(APIStreamClient, self).__init__(address, port, encrypt)
+                 ss_id=None, tick_fun=None):
+        super(APIStreamClient, self).__init__(address, port)
         """ _ssId -  stream session id 
             _tickFun - data processing function
             _running - loop condition used in _t
