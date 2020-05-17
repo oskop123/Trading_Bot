@@ -11,6 +11,7 @@ class Macs:
         """ short_window - short window length
             long_window - long window length """
         self.price = []
+        self.portfolio = [] # ZADANIE 1
         self.long_window = long_window
         self.long_average = []
         self.short_window = short_window
@@ -23,6 +24,11 @@ class Macs:
         """ Update the price list and calculate strategy """
         self.price.append(ask)
         self.strategy()
+
+    # ZADANIE 1
+    def update_portfolio(self, money):
+        """ Update portfolio """
+        self.portfolio.append(money)
 
     def strategy(self):
         """ Calculate buy/sell signals """
@@ -44,12 +50,13 @@ class Macs:
     def raport(self, symbol):
         """ Save the data into a .csv file and plot """
         self.price = self.price[50:]
-        df = pd.DataFrame(list(zip(*[self.price, self.short_average, self.long_average, self.positions])))
-        df.columns = ['Price', 'Short average', 'Long average', 'Positions']
+        # ZADANIE 1
+        df = pd.DataFrame(list(zip(*[self.price, self.short_average, self.long_average, self.positions, self.portfolio])))
+        df.columns = ['Price', 'Short average', 'Long average', 'Positions', 'Portfolio']
         df.to_csv(symbol+'.csv', index=False)
 
         fig = plt.figure()
-        ax1 = fig.add_subplot(111,  ylabel='Price')
+        ax1 = fig.add_subplot(211,  ylabel='Price')
         # Plot price
         df['Price'].plot(ax=ax1, color='r', lw=2.)
         # Plot both averages
@@ -62,5 +69,12 @@ class Macs:
         ax1.plot(df.loc[df.Positions == -1.0].index, 
                 df['Short average'][df['Positions'] == -1.0],
                 'v', markersize=10, color='k')
+
         plt.title(symbol)
+
+        # ZADANIE 1
+        ax2 = fig.add_subplot(212, ylabel='Portfolio')
+        df['Portfolio'].plot(ax=ax2, color='b', lw=2.)
+        plt.title('Portfolio')
+
         plt.savefig(symbol+'.png')
