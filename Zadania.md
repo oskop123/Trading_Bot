@@ -14,7 +14,7 @@ Kroki postępowania:
     "margin_free": 995227635.00,\
     "margin_level": 173930.41\
     } <br>	
-} <br><br>
+} \n\n
 Przykład komunikacji z API znajduje się np. w metodzie *sell()* klasy *DataStorage*
 - zapisz pole *equity* znajdujące się w części *returnData* do zmiennej *money*.
 - zmienną *money* przekaż do metody *update_portfolio()* (metodę tę utworzymy w następnym punkcie) obiektu *s*, który reprezentuje jedną z obserwowanych spółek
