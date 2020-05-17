@@ -15,12 +15,12 @@ Kroki postępowania:
     "margin_level": 173930.41\
     } <br>	
 } <br>
-<!-- End of list -->
 Przykład komunikacji z API znajduje się np. w metodzie *sell()* klasy *DataStorage*
 - zapisz pole *equity* znajdujące się w części *returnData* do zmiennej *money*.
 - zmienną *money* przekaż do metody *update_portfolio()* (metodę tę utworzymy w następnym punkcie) obiektu *s*, który reprezentuje jedną z obserwowanych spółek
 - w pliku *MovingAverageCrossoverStrategy.py*, w klasie *Macs* zainicjalizuj w konstruktorze listę *portfolio*, która będzie przechowywała zmieniającą się wartość stanu konta
 - dopisz do klasy *Macs* metodę *update_portfolio()*, która przyjmuje argument *money* i dopisuje go do listy *portfolio*\
+<!-- End of list -->
 Na tym etapie program powinien zapisywać na bieżąco wszystkie zmieny stanu konta.
 ### 1.2
 Czas poszerzyć metodę *raport* klasy *Macs* o możliwość raportowania stanu konta:
