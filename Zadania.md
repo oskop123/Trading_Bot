@@ -4,8 +4,8 @@ Pliki do zadania 1 znajdują się w folderze Zad1. Poszerz działanie programu o
 Kroki postępowania:
 - w pliku *data_storage.py* zmodyfikuj metodę *fetch_data()* klasy *DataStorage* tak, aby pobierała dane o stanie konta z API. Polecenie, które należy przekazać do serwera to *getMarginLevel* (bez dodatkowych argumentów). Serwer odpowie następującą strukturą:\
 { \
-	>"status": true,\
-	>"returnData": { \
+	> "status": true,\
+	> "returnData": { \
 		>>"balance": 995800269.43,\
 		>>"credit": 1000.00,\
 		>>"currency": "PLN",\
