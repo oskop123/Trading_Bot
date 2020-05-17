@@ -13,7 +13,7 @@ Kroki postępowania:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"margin": 572634.43,\
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"margin_free": 995227635.00,\
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"margin_level": 173930.41\
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} <br>	
+&nbsp;&nbsp;&nbsp;&nbsp;} <br>	
 } <br>
 Przykład komunikacji z API znajduje się np. w metodzie *sell()* klasy *DataStorage*
 - zapisz pole *equity* znajdujące się w części *returnData* do zmiennej *money*.
