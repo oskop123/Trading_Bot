@@ -26,3 +26,12 @@ Na tym etapie program powinien zapisywać na bieżąco wszystkie zmieny stanu ko
 Czas poszerzyć metodę *raport* klasy *Macs* o możliwość raportowania stanu konta:
 - dodaj do DataFramu *df* kolumnę *Poftfolio* i pszechowaj w niej zmienną *portfolio*
 - do *fig* dodaj subplot, który narysuje wykres zmian w portfolio.
+
+# Zadanie 2
+Aktualnie program zarabia pieniądze otwierając pozycję *buy* przy niskiej cenie i zamykając pozycję *buy* przy wysokiej cenie. Zmodyfikuj program tak, aby możeliwe było zarabianie poprzez otwarcie pozycji *sell* przy wysokiej cenie i zamknięcie pozycji *sell* przy niższej cenie.\
+Program podejmuje decyzje o otwarciu i zamknięciu pozycji w metodzie *transaction()* klasy *DataStorage* na podstawie sygnałów przesłanych przez klasę *Macs*.\
+Przeanalizuj działanie metod *transaction(), buy()* oraz *sell()*. Napisz nowe metody umożliwiające zarabianie na spadkach.\
+Przeczytaj dokumentację komendy *tradeTransaction* dostępnej pod linkiem:\
+http://developers.xstore.pro/documentation/#tradeTransaction
+oraz zapoznaj się z plikiem *xAPIConnector.py*, znajdują się tam klasy, które mogą pomóc przy ustawianiu argumentów komendy *tradeTransaction*.\
+**Uwaga!** Jako wolumen transakcji ustaw warość 1. Zwróć również uwagę na cenę, którą należy podać (ask lub bid price).
