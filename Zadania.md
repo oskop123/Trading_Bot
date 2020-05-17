@@ -6,13 +6,13 @@ Kroki postępowania:
 { <br>
 	> "status": true,\
 	> "returnData": { <br>
-		>> "balance": 995800269.43,\
-		>> "credit": 1000.00,\
-		>> "currency": "PLN",\
-		>> "equity": 995985397.56,\
-		>> "margin": 572634.43,\
-		>> "margin_free": 995227635.00,\
-		>> "margin_level": 173930.41\
+		"balance": 995800269.43,\
+		"credit": 1000.00,\
+		"currency": "PLN",\
+		"equity": 995985397.56,\
+		"margin": 572634.43,\
+		"margin_free": 995227635.00,\
+		"margin_level": 173930.41\
 	> } <br>	
 } <br>
 Przykład komunikacji z API znajduje się np. w metodzie *sell()* klasy *DataStorage*
