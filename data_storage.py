@@ -40,11 +40,11 @@ class DataStorage:
         stock = self.data.get(symbol)
 
         if stock.position == 1:
-            self.buy(symbol, ask)
+            self.open_buy(symbol, ask)
         if stock.position == -1:
-            self.sell(symbol, bid)
+            self.close_buy(symbol, bid)
 
-    def buy(self, symbol, price):
+    def open_buy(self, symbol, price):
         """ Open long position.
             name - name of the stock to trade
             price - price of the stock to trade """
@@ -62,7 +62,7 @@ class DataStorage:
         response = self.command_execute('tradeTransaction', transaction)
         print('Buy ', symbol, ' for ', price, ', status: ', response['status'])
 
-    def sell(self, symbol, price):
+    def close_buy(self, symbol, price):
         """ Close long position.
             name - name of the stock to trade
             price - price of the stock to trade """

@@ -30,10 +30,6 @@ class DataStorage:
         s.update(ask)
         # Trade
         self.transaction(symbol, ask, bid)
-        # ZADANIE 1
-        portfolio = self.command_execute('getMarginLevel')
-        money = portfolio['returnData']['equity']
-        s.update_portfolio(money)
 
     def transaction(self, symbol, ask, bid):
         """ Perfom transactions based on generated signlas.
@@ -44,13 +40,15 @@ class DataStorage:
         stock = self.data.get(symbol)
 
         if stock.position == 1:
+            self.close_sell(symbol, ask)    # ZADANIE 2
             self.open_buy(symbol, ask)
         if stock.position == -1:
             self.close_buy(symbol, bid)
+            self.open_sell(symbol, bid)     # ZADANIE 2
 
     def open_buy(self, symbol, price):
         """ Open long position.
-            name - name of the stock to trade
+            symbol - symbol of the stock to trade
             price - price of the stock to trade """
 
         transaction = {
@@ -64,11 +62,11 @@ class DataStorage:
             }
         }
         response = self.command_execute('tradeTransaction', transaction)
-        print('Buy ', symbol, ' for ', price, ', status: ', response['status'])
+        print('Open buy ', symbol, ' for ', price, ', status: ', response['status'])
 
     def close_buy(self, symbol, price):
         """ Close long position.
-            name - name of the stock to trade
+            symbol - symbol of the stock to trade
             price - price of the stock to trade """
 
         # List opened positions
@@ -95,7 +93,57 @@ class DataStorage:
             }
         }
         response = self.command_execute('tradeTransaction', transaction)
-        print('Sell ', symbol, ' for ', price, ', status: ', response['status'])
+        print('Close buy ', symbol, ' for ', price, ', status: ', response['status'])
+
+    # ZADANIE 2
+    def open_sell(self, symbol, price):
+        """ Open short position.
+            symbol - symbol of the stock to trade
+            price - price of the stock to trade """
+
+        transaction = {
+            "tradeTransInfo": {
+                "cmd": xAPIConnector.TransactionSide.SELL,
+                "order": 0,
+                "price": price,
+                "symbol": symbol,
+                "type": xAPIConnector.TransactionType.ORDER_OPEN,
+                "volume": 1
+            }
+        }
+        response = self.command_execute('tradeTransaction', transaction)
+        print('Open sell ', symbol, ' for ', price, ', status: ', response['status'])
+
+    def close_sell(self, symbol, price):
+        """ Close short position.
+            symbol - symbol of the stock to trade
+            price - price of the stock to trade """
+
+        # List opened positions
+        transaction = {
+            "openedOnly": True
+        }
+        trades = self.command_execute('getTrades', transaction)
+        # Get latest position
+        for trade in trades['returnData']:
+            if trade['symbol'] == symbol:
+                last_position = trade
+                break
+        # Extract order ID
+        order = last_position['order']
+
+        transaction = {
+            "tradeTransInfo": {
+                "cmd": xAPIConnector.TransactionSide.SELL,
+                "order": order,
+                "price": price,
+                "symbol": symbol,
+                "type": xAPIConnector.TransactionType.ORDER_CLOSE,
+                "volume": 1
+            }
+        }
+        response = self.command_execute('tradeTransaction', transaction)
+        print('Close sell ', symbol, ' for ', price, ', status: ', response['status'])
 
     def raport(self):
         for symbol, obj in self.data.items():
