@@ -11,7 +11,6 @@ class Macs:
         """ short_window - short window length
             long_window - long window length """
         self.price = []
-        self.portfolio = [] # ZADANIE 1
         self.long_window = long_window
         self.long_average = []
         self.short_window = short_window
@@ -19,16 +18,14 @@ class Macs:
         self.last_signal = 0
         self.position = 0
         self.positions = []
+        # ZADANIE 1 <--------------------------------------------
 
     def update(self, ask):
         """ Update the price list and calculate strategy """
         self.price.append(ask)
         self.strategy()
 
-    # ZADANIE 1
-    def update_portfolio(self, money):
-        """ Update portfolio """
-        self.portfolio.append(money)
+    # ZADANIE 1 <--------------------------------------------
 
     def strategy(self):
         """ Calculate buy/sell signals """
@@ -50,9 +47,9 @@ class Macs:
     def raport(self, symbol):
         """ Save the data into a .csv file and plot """
         self.price = self.price[50:]
-        # ZADANIE 1
-        df = pd.DataFrame(list(zip(*[self.price, self.short_average, self.long_average, self.positions, self.portfolio])))
-        df.columns = ['Price', 'Short average', 'Long average', 'Positions', 'Portfolio']
+        # ZADANIE 1 <--------------------------------------------
+        df = pd.DataFrame(list(zip(*[self.price, self.short_average, self.long_average, self.positions])))
+        df.columns = ['Price', 'Short average', 'Long average', 'Positions']
         df.to_csv(symbol+'.csv', index=False)
 
         fig = plt.figure()
@@ -72,9 +69,6 @@ class Macs:
 
         plt.title(symbol)
 
-        # ZADANIE 1
-        ax2 = fig.add_subplot(212, ylabel='Portfolio')
-        df['Portfolio'].plot(ax=ax2, color='b', lw=2.)
-        plt.title('Portfolio')
+        # ZADANIE 1 <--------------------------------------------
 
         plt.savefig(symbol+'.png')
